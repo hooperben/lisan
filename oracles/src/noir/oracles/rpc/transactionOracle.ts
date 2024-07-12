@@ -1,11 +1,11 @@
-import { type ForeignCallOutput } from '@noir-lang/noir_js';
-import { NoirArguments } from '../types.js';
-import { MultiChainClient } from '../../../ethereum/client.js';
-import { txTypeToHex } from '../../../ethereum/receipt.js';
-import { getTxProof } from '../../../ethereum/txProof.js';
-import { encodeTx, encodeTxProof } from './transactionOracle/encode.js';
-import { decodeGetReceiptArguments } from './receiptOracle.js';
-import { assert } from '../../../util/assert.js';
+import { type ForeignCallOutput } from "@noir-lang/noir_js";
+import { NoirArguments } from "../types.js";
+import { MultiChainClient } from "../../../ethereum/client.js";
+import { txTypeToHex } from "../../../ethereum/receipt.js";
+import { getTxProof } from "../../../ethereum/txProof.js";
+import { encodeTx, encodeTxProof } from "./transactionOracle/encode.js";
+import { decodeGetReceiptArguments } from "./receiptOracle.js";
+import { assert } from "../../../util/assert.js";
 
 export enum OFFSETS {
   TX_TYPE,
@@ -20,7 +20,7 @@ export enum OFFSETS {
   V,
   R,
   S,
-  PROOF_INPUT
+  PROOF_INPUT,
 }
 
 export const getTransactionOracle = async (
@@ -29,7 +29,10 @@ export const getTransactionOracle = async (
 ): Promise<ForeignCallOutput[]> => {
   const { blockNumber, txId, chainId } = decodeGetTransactionArguments(args);
   const client = multiChainClient.getClient(chainId);
-  const block = await client.getBlock({ blockNumber, includeTransactions: true });
+  const block = await client.getBlock({
+    blockNumber,
+    includeTransactions: true,
+  });
 
   if (txId >= block.transactions.length) {
     throw new Error(`Transaction not found for txId: ${txId}`);
@@ -39,11 +42,16 @@ export const getTransactionOracle = async (
     transaction.transactionIndex == txId,
     `Transaction's transactionIndex: ${transaction.transactionIndex} does not match given transaction index: ${txId}`
   );
-  const txProof = await getTxProof(block.transactions, block.transactionsRoot, txId);
+  const txProof = await getTxProof(
+    block.transactions,
+    block.transactionsRoot,
+    txId
+  );
 
   const txType = txTypeToHex(transaction.type);
   const encodedTransaction = encodeTx(transaction);
   const encodedTxProof = encodeTxProof(txProof);
+  console.log([txType, ...encodedTransaction, encodedTxProof]);
   return [txType, ...encodedTransaction, encodedTxProof];
 };
 

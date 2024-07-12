@@ -32,5 +32,8 @@
   },
   "scripts": {
     "build:circuit": "./scripts/bash/build-circuit-to-contract.sh"
+  },
+  "dependencies": {
+    "json-rpc-2.0": "^1.7.0"
   }
 }
