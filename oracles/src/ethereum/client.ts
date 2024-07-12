@@ -1,8 +1,8 @@
-import dotenv from 'dotenv';
-import { Chain, createPublicClient, http } from 'viem';
-import * as chains from 'viem/chains';
-import { type AlchemyClient, alchemyActions } from './alchemyClient.js';
-import { assert } from '../util/assert.js';
+import dotenv from "dotenv";
+import { Chain, createPublicClient, http } from "viem";
+import * as chains from "viem/chains";
+import { type AlchemyClient, alchemyActions } from "./alchemyClient.js";
+import { assert } from "../util/assert.js";
 
 dotenv.config();
 
@@ -24,26 +24,34 @@ export class MultiChainClient {
     const clientMap: ClientMap = {};
 
     if (process.env.ETHEREUM_JSON_RPC_API_URL) {
+      console.log("listening to mainnet");
       clientMap[chains.mainnet.id] = MultiChainClient.createClient(
         chains.mainnet,
         process.env.ETHEREUM_JSON_RPC_API_URL
       );
     }
     if (process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA) {
+      console.log("listening to sepolia");
       clientMap[chains.sepolia.id] = MultiChainClient.createClient(
         chains.sepolia,
         process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA
       );
     }
-    assert(Object.keys(clientMap).length !== 0, 'Please provide at least one JSON_RPC_API_URL');
+    assert(
+      Object.keys(clientMap).length !== 0,
+      "Please provide at least one JSON_RPC_API_URL"
+    );
 
     return new MultiChainClient(clientMap);
   }
 
   public static from(client: AlchemyClient): MultiChainClient {
-    assert(client.chain !== undefined, 'Client is not assigned to a specific chain');
+    assert(
+      client.chain !== undefined,
+      "Client is not assigned to a specific chain"
+    );
     return new MultiChainClient({
-      [client.chain.id]: client
+      [client.chain.id]: client,
     });
   }
 
@@ -56,7 +64,7 @@ export class MultiChainClient {
   private static createClient(chain: Chain, rpcUrl: string): AlchemyClient {
     return createPublicClient({
       chain,
-      transport: http(rpcUrl)
+      transport: http(rpcUrl),
     }).extend(alchemyActions());
   }
 }
