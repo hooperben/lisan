@@ -15,3 +15,7 @@ cd ..
 cd circuits
 nargo test --oracle-resolver http://localhost:3000/api/hello --show-output
 ```
+
+### Acknowledgements:
+
+This would not be possible without the awesome work done by Vlayer and their noir libaries
