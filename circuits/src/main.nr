@@ -1,24 +1,22 @@
+use dep::ethereum::receipt::{get_receipt, TxReceiptWithinBlock};
+use dep::ethereum::transaction::{get_transaction, TransactionWithinBlock};
 
-
-#[oracle(getAddressFromRPC)]
-unconstrained fn get_address_from_rpc(input: [Field; 1]) -> [Field; 1] {}
-
-unconstrained fn wrapper_fn(input: [Field; 1]) -> [Field; 1] {
-    get_address_from_rpc(input)
-}
-
+global MAX_DATA_LEN = 1000;
 
 fn main() {
-    let returned_address = wrapper_fn([1]);
+    let receipt = get_receipt(11155111, 6298444, 21);
 
-    println(returned_address);
+    println(receipt);
+
+    let transaction: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction(11155111, 6298444, 21);
+
+    println(transaction);
 }
 
 #[test]
 fn test_main() {
     // main(1, 2);
     main();
-
 
     // Uncomment to make test fail
     // main(1, 1);
