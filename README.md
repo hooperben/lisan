@@ -13,7 +13,7 @@ bun run dev
 cd ..
 
 cd circuits
-nargo test --oracle-resolver http://localhost:3000/api/hello --show-output
+nargo test --oracle-resolver=http://127.0.0.1:5555 --show-output
 ```
 
 ### Acknowledgements:
