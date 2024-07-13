@@ -34,6 +34,8 @@
     "build:circuit": "./scripts/bash/build-circuit-to-contract.sh"
   },
   "dependencies": {
-    "json-rpc-2.0": "^1.7.0"
+    "json-rpc-2.0": "^1.7.0",
+    "toml": "^3.0.0",
+    "viem": "^2.17.3"
   }
 }
