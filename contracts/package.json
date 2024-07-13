@@ -1,6 +1,23 @@
 {
-  "name": "noir-hardhat-template-v2",
+  "dependencies": {
+    "json-rpc-2.0": "^1.7.0",
+    "toml": "^3.0.0",
+    "viem": "^2.17.3"
+  },
   "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@layerzerolabs/eslint-config-next": "~2.3.3",
+    "@layerzerolabs/lz-definitions": "^2.3.25",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.25",
+    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.25",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.25",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.25",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.25",
+    "@layerzerolabs/prettier-config-next": "^2.3.25",
+    "@layerzerolabs/solhint-config": "^2.3.3",
+    "@layerzerolabs/test-devtools-evm-foundry": "~0.2.7",
+    "@layerzerolabs/toolbox-foundry": "~0.1.7",
+    "@layerzerolabs/toolbox-hardhat": "~0.2.35",
     "@noir-lang/backend_barretenberg": "^0.30.0",
     "@noir-lang/noir_js": "^0.30.0",
     "@noir-lang/noir_wasm": "^0.30.0",
@@ -24,18 +41,15 @@
     "ethers": "^6.13.1",
     "fixed-merkle-tree": "^0.7.3",
     "hardhat": "^2.22.4",
+    "hardhat-deploy": "^0.12.1",
     "hardhat-gas-reporter": "^2.2.0",
     "solidity-coverage": "^0.8.12",
     "ts-node": "^10.9.2",
     "typechain": "^8.3.0",
     "typescript": "^5.4.5"
   },
+  "name": "noir-hardhat-template-v2",
   "scripts": {
     "build:circuit": "./scripts/bash/build-circuit-to-contract.sh"
-  },
-  "dependencies": {
-    "json-rpc-2.0": "^1.7.0",
-    "toml": "^3.0.0",
-    "viem": "^2.17.3"
   }
 }

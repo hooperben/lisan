@@ -2,33 +2,27 @@
 pragma solidity ^0.8.24;
 
 import "./circuits/UltraVerifier.sol";
+import "./OChain.sol";
+
 import "hardhat/console.sol";
 
 // the lisan al gaib will point the way
-contract Lisan {
+contract Lisan is OChain {
     UltraVerifier public verifier;
 
-    mapping(uint64 chainId => mapping(uint64 timestamp => bytes32 blockhash))
-        public knownHashes;
-
-    constructor(address _verifier) {
+    constructor(
+        address _verifier,
+        address _owner,
+        address _endpoint
+    ) OChain(_endpoint, _owner) {
         verifier = UltraVerifier(_verifier);
-    }
-
-    function addToHistory(
-        uint64 _chainId,
-        uint64 _blockNumber,
-        bytes32 _blockhash
-    ) public {
-        knownHashes[_chainId][_blockNumber] = _blockhash;
     }
 
     function isBlockInHistory(
         uint64 _chainId,
-        uint64 _blockNumber,
-        bytes32 _blockhash
+        uint64 _blockNumber
     ) public view returns (bool) {
-        return knownHashes[_chainId][_blockNumber] == _blockhash;
+        return visions[_chainId][_blockNumber] != bytes32(0);
     }
 
     function _formatTxHash(
@@ -93,11 +87,9 @@ contract Lisan {
 
         // we need to check that this blockHash is in our history
         require(
-            isBlockInHistory(
-                uint64(uint256(_publicInputs[0])),
-                uint64(uint256(_publicInputs[1])),
-                blockHash
-            ),
+            visions[uint64(uint256(_publicInputs[0]))][
+                uint64(uint256(_publicInputs[1]))
+            ] == blockHash,
             "Block not in history"
         );
 
@@ -105,5 +97,19 @@ contract Lisan {
         bool isValid = verifier.verify(_proof, _publicInputs);
 
         console.log("isValid: ", isValid);
+    }
+
+    // handy for testing - this functionality IRL needs to be only callable by OZ
+    function addToHistory(
+        uint64 _chainId,
+        uint64 _blockNumber,
+        bytes32 _blockhash
+    ) public onlyOwner {
+        visions[_chainId][_blockNumber] = _blockhash;
+        emit BlockHashReceived(
+            uint64(_chainId),
+            uint64(_blockNumber),
+            _blockhash
+        );
     }
 }
