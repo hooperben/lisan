@@ -176,14 +176,8 @@ describe("testing lisan", async () => {
       return "0x" + txHash;
     }
 
-    const tx_hash = convertHexArrayToTxHash(bytes32Array);
-    console.log(tx_hash);
-
-    // console.log(bytes32String);
-
-    // console.log(proof);
-
-    // console.log(witness);
+    const block_hash = convertHexArrayToTxHash(bytes32Array);
+    console.log(block_hash);
 
     console.log(publicInputs);
 
@@ -192,6 +186,17 @@ describe("testing lisan", async () => {
     console.log(input);
 
     console.log(Uint8Array.from(bytes32Array));
+
+    // we need to add our block hash to the registry
+    await lisan.addToHistory(input[0], input[1], block_hash);
+
+    const isInHistory = await lisan.isBlockInHistory(
+      input[0],
+      input[1],
+      block_hash
+    );
+
+    console.log(isInHistory);
 
     // @ts-ignore
     await lisan.verifyInHistory(proofData.proof, [
