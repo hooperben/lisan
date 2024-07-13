@@ -20,9 +20,6 @@ contract Lisan {
         uint64 _blockNumber,
         bytes32 _blockhash
     ) public {
-        // console.log(_chainId);
-        // console.log(_blockNumber);
-        // console.logBytes32(_blockhash);
         knownHashes[_chainId][_blockNumber] = _blockhash;
     }
 
