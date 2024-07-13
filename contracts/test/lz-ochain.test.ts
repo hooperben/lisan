@@ -6,6 +6,7 @@ import {
   BaseContract,
   ContractFactory,
   parseEther,
+  solidityPackedKeccak256,
   zeroPadValue,
 } from "ethers";
 import { ethers } from "hardhat";
@@ -146,21 +147,14 @@ describe("lz testing lisan", async () => {
         hi: string;
       };
     }
-    interface ProofData {
-      proof: Uint8Array;
-      inputMap: InputMap;
-    }
-    const proofData = await readProofData();
 
-    console.log(proofData);
+    const proofData = await readProofData();
 
     const publicInputs = abiEncode(
       abi,
       proofData.inputMap,
       proofData.inputMap.return
     );
-
-    console.log(publicInputs);
 
     const input = Array.from(publicInputs.values());
 
@@ -169,10 +163,35 @@ describe("lz testing lisan", async () => {
     ).block_hash.map((hash) => `0x${hash.slice(-2)}`);
     const block_hash = convertHexArrayToTxHash(bytes32Array);
 
+    // for our test case, we are just going to add the block to the history and not use lz
     await LisanChainB.addToHistory(input[0], input[1], block_hash);
 
-    console.log(input);
+    const ProofOfETHSepoliaTransfer = await ethers.getContractFactory(
+      "ProofOfETHSepoliaTransfer"
+    );
 
-    await LisanChainB.verifyInHistory(proofData.proof, [...input]);
+    const proofOfEthSepoliaTransfer = await ProofOfETHSepoliaTransfer.deploy(
+      // @ts-ignore
+      ultraVerifierB.address,
+      // @ts-ignore
+      LisanChainB.address
+    );
+
+    const txHash = await solidityPackedKeccak256(
+      ["bytes32", "uint256"],
+      [block_hash, BigInt(input[2])]
+    );
+
+    const txProven = await proofOfEthSepoliaTransfer.txProven(txHash);
+
+    expect(txProven).to.be.false;
+
+    await proofOfEthSepoliaTransfer.proveETHSepoliaTransfer(proofData.proof, [
+      ...input,
+    ]);
+
+    const txProvenAfter = await proofOfEthSepoliaTransfer.txProven(txHash);
+
+    expect(txProvenAfter).to.be.true;
   });
 });
