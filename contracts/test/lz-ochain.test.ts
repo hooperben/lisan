@@ -55,16 +55,12 @@ describe("lz testing lisan", async () => {
     ultraVerifierB = (await ultraVerifierFactory.deploy()) as UltraVerifier;
 
     LisanChainA = (await LisanFactory.deploy(
-      // @ts-ignore
-      ultraVerifierA.address,
       Deployer.address,
       // @ts-ignore
       mockEndpointV2A.address
     )) as Lisan;
 
     LisanChainB = (await LisanFactory.deploy(
-      // @ts-ignore -- these ts ignores are driving me fucking crazy
-      ultraVerifierB.address,
       Deployer.address,
       // @ts-ignore
       mockEndpointV2B.address
@@ -142,6 +138,10 @@ describe("lz testing lisan", async () => {
       block_number: string;
       chain_id: string;
       tx_index: string;
+      to: {
+        _is_some: boolean;
+        value: string[];
+      };
       value: {
         lo: string;
         hi: string;
@@ -161,6 +161,7 @@ describe("lz testing lisan", async () => {
     const bytes32Array = (
       proofData.inputMap as unknown as InputMap
     ).block_hash.map((hash) => `0x${hash.slice(-2)}`);
+
     const block_hash = convertHexArrayToTxHash(bytes32Array);
 
     // for our test case, we are just going to add the block to the history and not use lz
