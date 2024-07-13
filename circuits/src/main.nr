@@ -10,27 +10,20 @@ fn main(
     block_hash: pub [u8; 32],
     value: pub U128,
 ) {
-    // 11155111, 6298444, 21
     // let receipt = get_receipt(chainId, blockNumber as u64, txIndex);
 
     // println(receipt);
 
     let transaction: TransactionWithinBlock<MAX_DATA_LEN> = get_transaction(chainId, blockNumber as u64, txIndex);
-
-    // see handy-python-scripts/txhash-to-bytes.py
-
     println(transaction.transaction.value);
 
     // check that the value of the transaction is 2 ETH
     assert(transaction.transaction.value == value);
 
     // println(transaction.value);
+    // check that the block hash is the same as the one passed in
     assert(transaction.block_hash == block_hash);
-    // let value 2_000_000_000_000_000_000;
 
-    // assert(transaction.value ==value);
-
-    // transaction.value = 2 ETH here could be good?
     // assert(transaction.block_hash == [246, 35, 195, 117, 89, 89, 20, 126, 85, 250, 18, 12, 184, 54, 216, 194, 60, 187, 151, 128, 33, 152, 77, 212, 11, 6, 50, 3, 204, 239, 153, 16]);
     // assert(transaction.block_hash == [0xf6, 0x23, 0xc3, 0x75, 0x59, 0x59, 0x14, 0x7e, 0x55, 0xfa, 0x12, 0x0c, 0xb8, 0x36, 0xd8, 0xc2, 0x3c, 0xbb, 0x97, 0x80, 0x21, 0x98, 0x4d, 0xd4, 0x0b, 0x06, 0x32, 0x03, 0xcc, 0xef, 0x99, 0x10]);
 }
