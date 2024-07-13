@@ -40,13 +40,16 @@ async function main() {
   const { address, abi } = await deployments.get("Lisan");
   const Lisan = new Contract(address, abi, Deployer) as unknown as Lisan;
 
-  const desiredBlockNumber = 6304922;
+  const desiredBlockNumber = 6305158;
+  const destChainId = 40267;
 
-  console.log("Sending message to", lzDetails.eid);
+  const blockNumber = await Deployer.provider.getBlockNumber();
+
+  console.log("Current block number", blockNumber);
 
   // Define native fee and quote for the message send operation
   const [nativeFee] = await Lisan.quote(
-    40267,
+    destChainId,
     desiredBlockNumber,
     options,
     false
@@ -54,11 +57,9 @@ async function main() {
 
   console.log(formatEther(nativeFee + (nativeFee * 20n) / 100n), "ETH");
 
-  const tx = await Lisan.send(40267, 6304923, options, {
+  const tx = await Lisan.send(destChainId, desiredBlockNumber, options, {
     value: nativeFee + (nativeFee * 20n) / 100n,
   });
-
-  await tx.wait();
 }
 
 main().catch((error) => {
