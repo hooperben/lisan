@@ -1,17 +1,20 @@
+import { Options } from "@layerzerolabs/lz-v2-utilities";
+import { Abi, abiEncode } from "@noir-lang/noirc_abi";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import {
   BaseContract,
-  Contract,
   ContractFactory,
   parseEther,
   zeroPadValue,
 } from "ethers";
 import { ethers } from "hardhat";
-import { EndpointV2Mock, Lisan } from "../typechain-types";
 import circuit_acir from "../../circuits/target/circuits.json";
-import { Options } from "@layerzerolabs/lz-v2-utilities";
+import {
+  convertHexArrayToTxHash,
+  readProofData,
+} from "../helpers/general-helpers";
+import { EndpointV2Mock, Lisan, UltraVerifier } from "../typechain-types";
 
 // @ts-ignore -- should be fine I think
 export const abi = circuit_acir.abi as unknown as Abi;
@@ -28,6 +31,9 @@ describe("lz testing lisan", async () => {
   let mockEndpointV2A: BaseContract;
   let mockEndpointV2B: BaseContract;
 
+  let ultraVerifierA: UltraVerifier;
+  let ultraVerifierB: UltraVerifier;
+
   before(async () => {
     LisanFactory = await ethers.getContractFactory("Lisan");
 
@@ -40,18 +46,24 @@ describe("lz testing lisan", async () => {
     mockEndpointV2A = await EndpointV2Mock.deploy(eidA);
     mockEndpointV2B = await EndpointV2Mock.deploy(eidB);
 
-    // @ts-ignore
-    const verifierAddress = await Deployer.getAddress(); // TODO can be fake here - we just want to test LZ
+    const ultraVerifierFactory =
+      await ethers.getContractFactory("UltraVerifier");
+
+    // not really needed, but having 2 is nice I guess
+    ultraVerifierA = (await ultraVerifierFactory.deploy()) as UltraVerifier;
+    ultraVerifierB = (await ultraVerifierFactory.deploy()) as UltraVerifier;
 
     LisanChainA = (await LisanFactory.deploy(
-      verifierAddress,
+      // @ts-ignore
+      ultraVerifierA.address,
       Deployer.address,
       // @ts-ignore
       mockEndpointV2A.address
     )) as Lisan;
 
     LisanChainB = (await LisanFactory.deploy(
-      verifierAddress,
+      // @ts-ignore -- these ts ignores are driving me fucking crazy
+      ultraVerifierB.address,
       Deployer.address,
       // @ts-ignore
       mockEndpointV2B.address
@@ -84,7 +96,7 @@ describe("lz testing lisan", async () => {
     );
   });
 
-  it("should run", async () => {
+  it("should run lz functionality successfully", async () => {
     // we should be able to send a message from A to B
     const options = Options.newOptions()
       .addExecutorLzReceiveOption(200000, 0)
@@ -121,5 +133,46 @@ describe("lz testing lisan", async () => {
     );
 
     expect(isInHistory).to.be.true;
+  });
+
+  it.only("should allow for a proof of a transaction", async () => {
+    interface InputMap {
+      block_hash: string[];
+      block_number: string;
+      chain_id: string;
+      tx_index: string;
+      value: {
+        lo: string;
+        hi: string;
+      };
+    }
+    interface ProofData {
+      proof: Uint8Array;
+      inputMap: InputMap;
+    }
+    const proofData = await readProofData();
+
+    console.log(proofData);
+
+    const publicInputs = abiEncode(
+      abi,
+      proofData.inputMap,
+      proofData.inputMap.return
+    );
+
+    console.log(publicInputs);
+
+    const input = Array.from(publicInputs.values());
+
+    const bytes32Array = (
+      proofData.inputMap as unknown as InputMap
+    ).block_hash.map((hash) => `0x${hash.slice(-2)}`);
+    const block_hash = convertHexArrayToTxHash(bytes32Array);
+
+    await LisanChainB.addToHistory(input[0], input[1], block_hash);
+
+    console.log(input);
+
+    await LisanChainB.verifyInHistory(proofData.proof, [...input]);
   });
 });
