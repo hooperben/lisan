@@ -4,7 +4,7 @@ import { promises as fs } from "fs";
 import { JSONRPCClient } from "json-rpc-2.0";
 import toml from "toml";
 import { Hex, isHex } from "viem";
-import { getAndBuildCircuit } from "../helpers/getAndBuildCircuit";
+import { getAndBuildCircuit } from "./getAndBuildCircuit";
 import { Abi, InputMap, abiEncode } from "@noir-lang/noirc_abi";
 
 interface ProofData {
@@ -13,6 +13,19 @@ interface ProofData {
 }
 
 export const BYTE_HEX_LEN = 2;
+
+export const convertHexArrayToTxHash = (hexArray: string[]): string => {
+  // Remove the '0x' prefix from each element in the array
+  const cleanHexArray = hexArray.map((hexValue) =>
+    hexValue.startsWith("0x") ? hexValue.slice(2) : hexValue
+  );
+
+  // Join the array into a single string
+  const txHash = cleanHexArray.join("");
+
+  // Add the '0x' prefix
+  return "0x" + txHash;
+};
 
 export function encodeHexStringToArray(value: string): Uint8Array {
   if (!isHex(value)) {
