@@ -37,6 +37,14 @@ export class MultiChainClient {
         process.env.ETHEREUM_JSON_RPC_API_URL_SEPOLIA
       );
     }
+
+    if (process.env.POYLGON_JSON_RPC_API_URL_AMOY) {
+      console.log("listening to amoy");
+      clientMap[chains.polygonAmoy.id] = MultiChainClient.createClient(
+        chains.polygonAmoy,
+        process.env.POYLGON_JSON_RPC_API_URL_AMOY
+      );
+    }
     assert(
       Object.keys(clientMap).length !== 0,
       "Please provide at least one JSON_RPC_API_URL"
