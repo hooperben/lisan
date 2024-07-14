@@ -16,7 +16,7 @@ cd circuits
 nargo test --oracle-resolver=http://127.0.0.1:5555 --show-output
 ```
 
-### Testing
+### Generating Proof Of Sepolia Transfer
 
 Anytime you make a change to the main.nr circuit, you need to run:
 
@@ -47,9 +47,11 @@ Note: this might seem broken, but it does take a while. Have a look at your acti
 
 ### Arb Sepolia
 
-| Contract | Address                                                                                                                      |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Lisan    | [0x381eba262eb91f55ca44748b1151406f5da5bd09](https://sepolia.arbiscan.io/address/0x381eba262eb91f55ca44748b1151406f5da5bd09) |
+| Contract               | Address                                                                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Lisan                  | [0x381eba262eb91f55ca44748b1151406f5da5bd09](https://sepolia.arbiscan.io/address/0x381eba262eb91f55ca44748b1151406f5da5bd09) |
+| ProofOfSepoliaTransfer | [0x68B13b58F55C91eeC85fa5F792deb4f759D86856](https://sepolia.arbiscan.io/address/0x68B13b58F55C91eeC85fa5F792deb4f759D86856) |
+| UltraVerifier          | [0xB943bFeDFeFA3F63213ff80Ffe31E4058de5E91D](https://sepolia.arbiscan.io/address/0xB943bFeDFeFA3F63213ff80Ffe31E4058de5E91D) |
 
 ## Real Testnet Proofs
 
