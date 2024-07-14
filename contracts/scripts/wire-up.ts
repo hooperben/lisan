@@ -9,6 +9,9 @@ async function main() {
   const sepolia = "0xdEfbc7F979aD934a401e0c2A426243470f077313";
   const sepoliaId = 40161;
 
+  const arbitrumSepolia = "0x381EBA262eb91f55ca44748B1151406F5Da5bd09";
+  const arbitrumSepoliaId = 40231;
+
   const [Deployer] = await ethers.getSigners();
 
   let contract: Lisan;
@@ -20,9 +23,17 @@ async function main() {
     remote = sepolia;
     remoteId = sepoliaId;
 
-    await contract
+    let tx = await contract
       .connect(Deployer)
       .setPeer(remoteId, zeroPadValue(remote, 32));
+
+    remote = arbitrumSepolia;
+    remoteId = arbitrumSepoliaId;
+
+    tx = await contract
+      .connect(Deployer)
+      .setPeer(remoteId, zeroPadValue(remote, 32));
+    await tx.wait();
   }
 
   if (hre.network.name === "sepolia") {
@@ -30,9 +41,43 @@ async function main() {
     remote = amoy;
     remoteId = amoyId;
 
-    await contract
+    let tx = await contract
       .connect(Deployer)
       .setPeer(remoteId, zeroPadValue(remote, 32));
+
+    await tx.wait();
+
+    remote = arbitrumSepolia;
+    remoteId = arbitrumSepoliaId;
+
+    tx = await contract
+      .connect(Deployer)
+      .setPeer(remoteId, zeroPadValue(remote, 32));
+
+    await tx.wait();
+  }
+
+  if (hre.network.name === "arbitrumSepolia") {
+    contract = await ethers.getContractAt("Lisan", arbitrumSepolia, Deployer);
+    remote = sepolia;
+    remoteId = sepoliaId;
+
+    let tx = await contract
+      .connect(Deployer)
+      .setPeer(remoteId, zeroPadValue(remote, 32));
+
+    await tx.wait();
+
+    console.log("wired sepolia to arbitrumSepolia");
+
+    remote = amoy;
+    remoteId = amoyId;
+
+    tx = await contract
+      .connect(Deployer)
+      .setPeer(remoteId, zeroPadValue(remote, 32));
+
+    console.log("wire amoy to arbitrumSepolia");
   }
 }
 

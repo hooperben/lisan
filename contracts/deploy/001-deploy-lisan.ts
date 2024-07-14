@@ -16,6 +16,10 @@ const lzEndpoints: lzRecord = {
     endpoint: "0x6EDCE65403992e310A62460808c4b910D972f10f",
     eid: 40161,
   },
+  arbitrumSepolia: {
+    endpoint: "0x6EDCE65403992e310A62460808c4b910D972f10f",
+    eid: 40231,
+  },
 };
 
 const deploy: DeployFunction = async (hre) => {

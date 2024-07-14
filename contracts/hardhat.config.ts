@@ -33,6 +33,11 @@ const config: HardhatUserConfig = {
       accounts: [process.env.PRIVATE_KEY],
       saveDeployments: true,
     },
+    arbitrumSepolia: {
+      url: process.env.ARBITRUM_JSON_RPC_API_URL_SEPOLIA,
+      accounts: [process.env.PRIVATE_KEY],
+      saveDeployments: true,
+    },
   },
   mocha: {
     timeout: 100_000,
