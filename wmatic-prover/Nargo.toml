@@ -1,0 +1,9 @@
+[package]
+name = "vrfproof"
+type = "bin"
+authors = [""]
+compiler_version = ">=0.30.0"
+
+[dependencies]
+ethereum = { path = "../circuits/ethereum/circuits/lib" }
+token = {path = "./src/vlayer-deps"}
