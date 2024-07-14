@@ -26,10 +26,14 @@ pub fn get_account_with_storage_recursive(
     public_inputs.extend_back(storage_key.serialize());
     public_inputs.extend_back(storage_within_block.serialize());
 
+    let first: [Field; NUM_PUBLIC_INPUTS] = public_inputs.to_array();
+    let formatted_public_inputs: [Field] = first.as_slice();
+
     verify_proof(
         verification_key.as_slice(),
         proof.as_slice(),
-        public_inputs.to_array().as_slice(),
+        formatted_public_inputs,
+        // public_inputs.to_array().as_slice(),
         key_hash
     );
 
