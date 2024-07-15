@@ -24,24 +24,16 @@ const lzEndpoints: lzRecord = {
 async function main() {
   const [Deployer] = await ethers.getSigners();
 
-  const lzDetails = lzEndpoints[hre.network.name];
-
-  if (!lzDetails) {
-    throw new Error(
-      "Missing LayerZero endpoint details for network " + hre.network.name
-    );
-  }
-
   const options = Options.newOptions()
     .addExecutorLzReceiveOption(200000, 0)
     .toHex()
     .toString();
 
   const { address, abi } = await deployments.get("Lisan");
-  const Lisan = new Contract(address, abi, Deployer) as unknown as Lisan;
+  const Lisan = new Contract(address, abi, Deployer) as unknown as OChain;
 
-  const desiredBlockNumber = 6305158;
-  const destChainId = 40267;
+  const desiredBlockNumber = 6308233;
+  const destChainId = 40231; // Arbitrum Sepolia
 
   const blockNumber = await Deployer.provider.getBlockNumber();
 

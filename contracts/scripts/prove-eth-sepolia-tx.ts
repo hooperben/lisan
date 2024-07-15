@@ -26,9 +26,6 @@ interface InputMap {
 async function main() {
   const [Deployer] = await ethers.getSigners();
 
-  if (network.name !== "amoy")
-    throw new Error("This script can only be run on the amoy network");
-
   const { address, abi: contractAbi } = await deployments.get(
     "ProofOfETHSepoliaTransfer"
   );

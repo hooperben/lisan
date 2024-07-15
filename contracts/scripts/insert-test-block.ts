@@ -9,13 +9,10 @@ async function main() {
   const { address, abi } = await deployments.get("Lisan");
   const Lisan = new Contract(address, abi, Deployer) as unknown as Lisan;
 
-  if (network.name !== "amoy")
-    throw new Error("This script can only be run on the amoy network");
-
   const tx = await Lisan.addToHistory(
     "0x0000000000000000000000000000000000000000000000000000000000aa36a7",
-    "0x0000000000000000000000000000000000000000000000000000000000601b4c",
-    "0xf623c3755959147e55fa120cb836d8c23cbb978021984dd40b063203ccef9910"
+    "0x0000000000000000000000000000000000000000000000000000000000603586",
+    "0xa48308fa4e1efd7b7e962af3dcc7a88834c1c6f1c0fee541211160f65c7d57c7"
   );
 
   console.log(tx);
