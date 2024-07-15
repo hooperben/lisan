@@ -51,6 +51,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       polygonAmoy: process.env.POLYGON_ETHERSCAN_API_KEY!,
       sepolia: process.env.ETHERSCAN_API_KEY!,
+      arbitrumSepolia: process.env.ARBITRUM_ETHERSCAN_API_KEY!,
     },
   },
 };
