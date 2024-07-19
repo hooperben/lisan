@@ -113,6 +113,8 @@ contract ProofOfETHSepoliaTransfer {
             uint64(uint256(_publicInputs[1]))
         );
 
+        require(blockHash != bytes32(0), "tickets please");
+
         // check that the input block hash matches lisans block hash
         require(lisanBlockHash == blockHash, "Block not in history");
 
