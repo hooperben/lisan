@@ -65,6 +65,3 @@ Note: this might seem broken, but it does take a while. Have a look at your acti
 ### Acknowledgements:
 
 This would not be possible without the awesome work done by Vlayer and their noir libaries
-
-![alt text](image.png)![alt text](image-1.png)![alt text](image-2.png)
-![alt text](image-3.png)![alt text](image-4.png)
