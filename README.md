@@ -1,6 +1,6 @@
-# eth-global-brussels
+# Lisan
 
-My hackathon repo for eth global brussels 2024
+Lisan uses block hashes sent between chains using LayerZero to prove events happened on a remote chain, on the current chain.
 
 ### Notes
 
