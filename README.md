@@ -64,4 +64,4 @@ Note: this might seem broken, but it does take a while. Have a look at your acti
 
 ### Acknowledgements:
 
-This would not be possible without the awesome work done by Vlayer and their noir libaries
+This would not be possible without the awesome work done by vLayer and their noir libaries
